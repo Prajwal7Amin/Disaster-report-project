@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Response Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Disaster Response Coordination Platform</h1>
+            <div class="ws-status">WebSocket Status: <span id="ws-status">Connecting...</span></div>
+        </header>
+
+        <main class="main-layout">
+            <div class="column">
+                <h2>Disasters</h2>
+                <form id="disaster-form">
+                    <input type="hidden" id="disaster-id">
+                    <input type="text" id="disaster-title" placeholder="Disaster Title" required>
+                    <textarea id="disaster-description" placeholder="Description (e.g., 'Flooding in downtown Manhattan')" required></textarea>
+                    <input type="text" id="disaster-tags" placeholder="Tags (comma-separated, e.g., flood,urgent)">
+                    <button type="submit">Create / Update Disaster</button>
+                    <button type="button" id="clear-form-btn">New</button>
+                </form>
+                <ul id="disasters-list">
+                    </ul>
+            </div>
+
+            <div class="column">
+                <div id="selected-disaster-container">
+                    <h2>Selected Disaster Details</h2>
+                    <div id="selected-disaster" class="details-box">
+                        <p>Select a disaster from the list to see details.</p>
+                    </div>
+
+                    <h2>Reports</h2>
+                     <form id="report-form" class="hidden">
+                        <textarea id="report-content" placeholder="Report content" required></textarea>
+                        <input type="url" id="report-image-url" placeholder="Image URL (e.g., https://.../image.jpg)">
+                        <button type="submit">Submit Report</button>
+                    </form>
+                    <ul id="reports-list">
+                        </ul>
+                </div>
+            </div>
+
+            <div class="column">
+                <h2>Social Media Feed</h2>
+                <div id="social-media-feed" class="details-box feed">
+                    <p>Select a disaster to see social media feed.</p>
+                </div>
+                 <h2>Real-Time Event Log</h2>
+                <div id="event-log" class="details-box feed">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

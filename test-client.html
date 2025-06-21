@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test Client</title>
+    <style>
+        body { font-family: monospace; background: #222; color: #eee; padding: 1em; }
+        h1 { color: #0f0; }
+        #log { border: 1px solid #444; padding: 1em; height: 80vh; overflow-y: scroll; }
+        .event { margin-bottom: 0.5em; border-bottom: 1px solid #333; padding-bottom: 0.5em; }
+        .event-name { color: #0ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test Client</h1>
+    <p>Status: <span id="status">Connecting...</span></p>
+    <div id="log"></div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const logDiv = document.getElementById('log');
+        const statusSpan = document.getElementById('status');
+
+        console.log("Attempting to connect to WebSocket server...");
+        const socket = io("http://localhost:3001");
+
+        // --- Connection Events ---
+        socket.on("connect", () => {
+            console.log("Connected successfully!", socket.id);
+            statusSpan.textContent = "Connected";
+            statusSpan.style.color = "#0f0";
+        });
+
+        socket.on("connect_error", (err) => {
+            console.error("Connection failed:", err.message);
+            statusSpan.textContent = "Connection Failed";
+            statusSpan.style.color = "#f00";
+        });
+        
+        socket.on("disconnect", () => {
+            console.log("Disconnected.");
+            statusSpan.textContent = "Disconnected";
+            statusSpan.style.color = "#f00";
+        });
+
+
+        // --- Custom Application Events ---
+        socket.on("disaster_updated", (payload) => {
+            console.log("Received 'disaster_updated':", payload);
+            const eventHtml = `<div class="event"><span class="event-name">[disaster_updated]</span> Action: ${payload.action} <br><pre>${JSON.stringify(payload.data, null, 2)}</pre></div>`;
+            logDiv.innerHTML += eventHtml;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        });
+
+        socket.on("new_report", (report) => {
+            console.log("Received 'new_report':", report);
+            const eventHtml = `<div class="event"><span class="event-name">[new_report]</span> New report created <br><pre>${JSON.stringify(report, null, 2)}</pre></div>`;
+            logDiv.innerHTML += eventHtml;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        });
+
+    </script>
+</body>
+</html>
